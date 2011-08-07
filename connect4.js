@@ -13,9 +13,9 @@ var connect4 = (function(){
         var COL_NUM = WIDTH  - 1;
         var ROW_NUM = HEIGHT - 1;
         
-        var board = build(WIDTH, HEIGHT);
+        var _whoHasConnect4 = 0;
 
-        function build(w, h) {
+        var board = function (w, h) {
             var b = [];
             var i = 0;
             for ( ; i < w; i++ ) {
@@ -26,6 +26,18 @@ var connect4 = (function(){
                 }
             }
             return b;
+        }(WIDTH, HEIGHT);
+
+        function whoHasConnect4() {
+            return _whoHasConnect4();
+        }
+
+        function redHasConnect4() {
+            return whoHasConnect4() == RED;
+        }
+
+        function blackHasConnect4() {
+            return whoHasConnect4() == BLACK;
         }
 
         function dropPiece(piece, column) {
@@ -136,8 +148,11 @@ var connect4 = (function(){
                     n++;
                 }
             }
-            if ( n == 4 ) return true;
-            else          return false;
+            if ( n == 4 ) {
+                _whoHasConnect4 = last;
+                return true;
+            }
+            else return false;
         }
 
         function hasVerticalConnect4() {
@@ -200,22 +215,13 @@ var connect4 = (function(){
         }
 
         return { 
-            board: board,
-            drop: dropPiece,
             dropRed: dropRed,
             dropBlack: dropBlack,
             eachCol: eachCol,
-            col: col,
             eachRow: eachRow,
-            row: row,
             hasConnect4: hasConnect4,
-            hasHorizontalConnect4: hasHorizontalConnect4,
-            hasVerticalConnect4: hasVerticalConnect4,
-            hasDiagonalConnect4: hasDiagonalConnect4,
-            linearSearch: linearSearch,
-            cell: cell,
-            line: line,
-            range: range,
+            redHasConnect4: redHasConnect4,
+            blackHasConnect4: blackHasConnect4
         }
 	}
 
