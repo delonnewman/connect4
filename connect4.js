@@ -29,7 +29,7 @@ var connect4 = (function(){
         }(WIDTH, HEIGHT);
 
         function whoHasConnect4() {
-            return _whoHasConnect4();
+            return _whoHasConnect4;
         }
 
         function redHasConnect4() {
