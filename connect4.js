@@ -8,19 +8,18 @@ var connect4 = (function(){
     var EMPTY  = 0;
     
     function Board() {
-        var WIDTH  = 7;
-        var HEIGHT = 6;
+        var WIDTH   = 7;
+        var HEIGHT  = 6;
+        var COL_NUM = WIDTH  - 1;
+        var ROW_NUM = HEIGHT - 1;
         
-        // not sure if this will always be true (it works for 7 x 6)
-        var DIAGONALS = WIDTH + HEIGHT - 1;
-
         var board = build(WIDTH, HEIGHT);
 
         function build(w, h) {
             var b = [];
             var i = 0;
             for ( ; i < w; i++ ) {
-                b[i] = []
+                b[i] = [];
                 var j = 0;
                 for ( ; j < h; j++ ) {
                     b[i][j] = EMPTY 
@@ -34,7 +33,7 @@ var connect4 = (function(){
             var col = board[column]
             for ( ; i < HEIGHT; i++ ) {
                 if ( col[i] == RED || col[i] == BLACK ) {
-                    if ( i == 0 ) return -1; // col full
+                    if ( i == 0 ) return false; // col full
                     else {
                         if ( col[i-1] == EMPTY ) col[i-1] = piece;
                     }
@@ -43,6 +42,7 @@ var connect4 = (function(){
                     if ( i == (HEIGHT - 1) ) col[i] = piece;
                 }
             }
+            return true
         }
 
         function dropRed(column) {
@@ -84,29 +84,40 @@ var connect4 = (function(){
             return board[x][y]
         }
 
-        function line(x1, y1, x2, y2) {
-            var xi = 1;
-            var yi = 1;
-            if ( x1 < x2 ) xi = -1
-            if ( y1 < y2 ) yi = -1
+        function line2(x1, y1, x2, y2) {
+            if ( x1 > COL_NUM  || x2 > COL_NUM  ) return [];
+            if ( y1 > ROW_NUM || y2 > ROW_NUM ) return [];
 
-            var xs = [];
-            var i = x1;
-            for ( ; i <= x2; i += xi ) {
-                xs.push(i)
-            }
+            var xs = range(x1, x2);
             console.log(xs);
 
-            var ys = [];
-            var j = y1;
-            for ( ; j <= y2; j += yi ) {
-                ys.push(j)
-            }
+            var ys = range(y1, y2);
             console.log(ys);
+
+            if ( xs.length != ys.length ) return [];
+
+            var line = []
+            var i = 0;
+            for ( ; i < xs.length; i++ ) {
+                line.push(board[ys[i]][xs[i]]);
+            }
+            return line;
         }
 
-        function diag(n) {
-            
+        function range(n, m) {
+            if ( n == m ) return [n];
+
+            var iter = 1;
+            var comp = function(a, b) { return a <= b };
+            if ( n >  m ) {
+                iter = -1;
+                comp = function(a, b) { return a >= b };
+            }
+
+            var r = [];
+            var i = n
+            for ( ; comp(i, m); i += iter ) r.push(i);
+            return r;
         }
 
         function linearSearch(col) {
@@ -145,11 +156,30 @@ var connect4 = (function(){
             return false;
         }
 
-        function hasDiagonalConnect4() {
+        function line(fn) {
+            var line = [];
             var i = 0;
-            for ( ; i < DIAGONALS; i++ ) {
-
+        
+            for ( ; i < WIDTH; i++ ) {
+                var x = i;
+                var y = fn(x);
+                if ( y > ROW_NUM || y < 0 || x > COL_NUM || x < 0 )
+                    continue;
+                else
+                    line.push(board[x][y]);
             }
+            return line;
+        }
+
+        function hasDiagonalConnect4() {
+            var i = COL_NUM * -1;
+            var n = ROW_NUM
+            for ( ; i < n; i++ ) {
+                var diag = line(function(x) { return x + i });
+                console.log(diag);
+                if ( linearSearch(diag) ) return true;
+            }
+            return false;
         }
 
         function hasConnect4() {
@@ -170,9 +200,11 @@ var connect4 = (function(){
             hasConnect4: hasConnect4,
             hasHorizontalConnect4: hasHorizontalConnect4,
             hasVerticalConnect4: hasVerticalConnect4,
+            hasDiagonalConnect4: hasDiagonalConnect4,
             linearSearch: linearSearch,
             cell: cell,
-            line: line
+            line: line,
+            range: range,
         }
 	}
 
@@ -183,3 +215,22 @@ var connect4 = (function(){
         EMPTY: EMPTY
     }
 }());
+
+function testDiag() {
+    var b = new connect4.Board();
+    b.dropRed(0);
+    b.dropBlack(1);
+    b.dropRed(1);
+    b.dropBlack(2);
+    b.dropBlack(2);
+    b.dropRed(2);
+    b.dropBlack(3);
+    b.dropBlack(3);
+    b.dropBlack(3);
+    b.dropRed(3);
+
+    b.eachRow(function(row){ console.log(row) });
+
+    if ( b.hasDiagonalConnect4() ) console.log("passed");
+    else console.log("failed");
+}
