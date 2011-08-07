@@ -172,10 +172,21 @@ var connect4 = (function(){
         }
 
         function hasDiagonalConnect4() {
-            var i = COL_NUM * -1;
-            var n = ROW_NUM
+            var i = COL_NUM * -1; // -6
+            var n = ROW_NUM;      //  5
             for ( ; i < n; i++ ) {
                 var diag = line(function(x) { return x + i });
+                console.log(diag);
+                if ( linearSearch(diag) ) return true;
+            }
+
+            // TODO: try to generalize
+            var j = 3;
+            var m = 8;
+            console.log(j);
+            console.log(m);
+            for ( ; j < m; j++ ) {
+                var diag = line(function(x) { return -x + j });
                 console.log(diag);
                 if ( linearSearch(diag) ) return true;
             }
