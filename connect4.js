@@ -96,42 +96,6 @@ var connect4 = (function(){
             return board[x][y]
         }
 
-        function line2(x1, y1, x2, y2) {
-            if ( x1 > COL_NUM  || x2 > COL_NUM  ) return [];
-            if ( y1 > ROW_NUM || y2 > ROW_NUM ) return [];
-
-            var xs = range(x1, x2);
-            console.log(xs);
-
-            var ys = range(y1, y2);
-            console.log(ys);
-
-            if ( xs.length != ys.length ) return [];
-
-            var line = []
-            var i = 0;
-            for ( ; i < xs.length; i++ ) {
-                line.push(board[ys[i]][xs[i]]);
-            }
-            return line;
-        }
-
-        function range(n, m) {
-            if ( n == m ) return [n];
-
-            var iter = 1;
-            var comp = function(a, b) { return a <= b };
-            if ( n >  m ) {
-                iter = -1;
-                comp = function(a, b) { return a >= b };
-            }
-
-            var r = [];
-            var i = n
-            for ( ; comp(i, m); i += iter ) r.push(i);
-            return r;
-        }
-
         function linearSearch(col) {
             var i = 0;
             var n = 0;
@@ -248,6 +212,6 @@ function testDiag() {
 
     b.eachRow(function(row){ console.log(row) });
 
-    if ( b.hasDiagonalConnect4() ) console.log("passed");
+    if ( b.hasConnect4() ) console.log("passed");
     else console.log("failed");
 }
