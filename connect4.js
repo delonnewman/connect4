@@ -155,18 +155,14 @@ var connect4 = (function(){
             var n = ROW_NUM;      //  5
             for ( ; i < n; i++ ) {
                 var diag = line(function(x) { return x + i });
-                console.log(diag);
                 if ( linearSearch(diag) ) return true;
             }
 
             // TODO: try to generalize
             var j = 3;
             var m = 8;
-            console.log(j);
-            console.log(m);
             for ( ; j < m; j++ ) {
                 var diag = line(function(x) { return -x + j });
-                console.log(diag);
                 if ( linearSearch(diag) ) return true;
             }
             return false;
@@ -197,21 +193,57 @@ var connect4 = (function(){
     }
 }());
 
-function testDiag() {
-    var b = new connect4.Board();
-    b.dropRed(0);
-    b.dropBlack(1);
-    b.dropRed(1);
-    b.dropBlack(2);
-    b.dropBlack(2);
-    b.dropRed(2);
-    b.dropBlack(3);
-    b.dropBlack(3);
-    b.dropBlack(3);
-    b.dropRed(3);
+connect4.test = function() {
+    function testDiag() {
+        var b = new connect4.Board();
+        b.dropRed(0);
+        b.dropBlack(1);
+        b.dropRed(1);
+        b.dropBlack(2);
+        b.dropBlack(2);
+        b.dropRed(2);
+        b.dropBlack(3);
+        b.dropBlack(3);
+        b.dropBlack(3);
+        b.dropRed(3);
+    
+        b.eachRow(function(row){ console.log(row) });
+    
+        if ( b.hasConnect4() ) console.log("passed");
+        else console.log("failed");
+    }
+    
+    function testHorizontal() {
+        var b = new connect4.Board();
+        b.dropRed(0);
+        b.dropRed(1);
+        b.dropRed(2);
+        b.dropRed(3);
+    
+        b.eachRow(function(row){ console.log(row) });
+    
+        if ( b.hasConnect4() ) console.log("passed");
+        else console.log("failed");
+    }
 
-    b.eachRow(function(row){ console.log(row) });
+    function testVertical() {
+        var b = new connect4.Board();
+        b.dropRed(0);
+        b.dropRed(0);
+        b.dropRed(0);
+        b.dropRed(0);
+    
+        b.eachRow(function(row){ console.log(row) });
+    
+        if ( b.hasConnect4() ) console.log("passed");
+        else console.log("failed");
+    }
 
-    if ( b.hasConnect4() ) console.log("passed");
-    else console.log("failed");
-}
+    function testSuite() {
+        testDiag();
+        testHorizontal();
+        testVertical();
+    }
+    
+    return { suite: testSuite }
+}();
