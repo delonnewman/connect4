@@ -2,7 +2,9 @@
  * connect4.js
  */
 
-var connect4 = (function(){
+var connect4 = { VERSION: '0.1' }
+
+connect4.model = (function(){
     var RED    = 1;
     var BLACK  = 2;
     var EMPTY  = 0;
@@ -195,7 +197,7 @@ var connect4 = (function(){
 
 connect4.test = function() {
     function testDiag() {
-        var b = new connect4.Board();
+        var b = new connect4.model.Board();
         b.dropRed(0);
         b.dropBlack(1);
         b.dropRed(1);
@@ -214,7 +216,7 @@ connect4.test = function() {
     }
     
     function testHorizontal() {
-        var b = new connect4.Board();
+        var b = new connect4.model.Board();
         b.dropRed(0);
         b.dropRed(1);
         b.dropRed(2);
@@ -227,7 +229,7 @@ connect4.test = function() {
     }
 
     function testVertical() {
-        var b = new connect4.Board();
+        var b = new connect4.model.Board();
         b.dropRed(0);
         b.dropRed(0);
         b.dropRed(0);
