@@ -30,19 +30,19 @@ connect4.model = (function(){
             return b;
         }(WIDTH, HEIGHT);
 
-        function whoHasConnect4() {
+        this.whoHasConnect4 = function() {
             return _whoHasConnect4;
         }
 
-        function redHasConnect4() {
-            return whoHasConnect4() == RED;
+        this.redHasConnect4 = function() {
+            return this.whoHasConnect4() == RED;
         }
 
-        function blackHasConnect4() {
-            return whoHasConnect4() == BLACK;
+        this.blackHasConnect4 = function() {
+            return this.whoHasConnect4() == BLACK;
         }
 
-        function dropPiece(piece, column) {
+        this.dropPiece = function(piece, column) {
             var i = 0;
             var col = board[column]
             for ( ; i < HEIGHT; i++ ) {
@@ -59,15 +59,15 @@ connect4.model = (function(){
             return true
         }
 
-        function dropRed(column) {
-            return dropPiece(RED, column);
+        this.dropRed = function(column) {
+            return this.dropPiece(RED, column);
         }
 
-        function dropBlack(column) {
-            return dropPiece(BLACK, column);
+        this.dropBlack = function(column) {
+            return this.dropPiece(BLACK, column);
         }
 
-        function row(n) {
+        this.row = function(n) {
             var row = [];
             var i = 0;
             for ( ; i < board.length; i++ ) {
@@ -76,29 +76,29 @@ connect4.model = (function(){
             return row;
         }
 
-        function eachRow(fn) {
+        this.eachRow = function(fn) {
             var i = 0;
             for ( ; i < HEIGHT; i++ ) {
-                fn(row(i));
+                fn(this.row(i));
             }
         }
 
-        function col(n) {
+        this.col = function(n) {
             return board[n];
         }
 
-        function eachCol(fn) {
+        this.eachCol = function(fn) {
             var i = 0;
             for ( ; i < WIDTH; i++ ) {
                 fn(board[i]);
             }
         }
 
-        function cell(x, y) {
+        this.cell = function(x, y) {
             return board[x][y]
         }
 
-        function linearSearch(col) {
+        this.linearSearch = function(col) {
             var i = 0;
             var n = 0;
             var last = 0;
@@ -121,23 +121,23 @@ connect4.model = (function(){
             else return false;
         }
 
-        function hasVerticalConnect4() {
+        this.hasVerticalConnect4 = function() {
             var i = 0;
             for ( ; i < WIDTH; i++ ) {
-                if ( linearSearch(col(i)) ) return true;
+                if ( this.linearSearch(this.col(i)) ) return true;
             }
             return false;
         }
 
-        function hasHorizontalConnect4() {
+        this.hasHorizontalConnect4 = function() {
             var i = 0;
             for ( ; i < HEIGHT; i++ ) {
-                if ( linearSearch(row(i)) ) return true;
+                if ( this.linearSearch(this.row(i)) ) return true;
             }
             return false;
         }
 
-        function line(fn) {
+        this.line = function(fn) {
             var line = [];
             var i = 0;
         
@@ -152,39 +152,31 @@ connect4.model = (function(){
             return line;
         }
 
-        function hasDiagonalConnect4() {
+        this.hasDiagonalConnect4 = function() {
             var i = COL_NUM * -1; // -6
             var n = ROW_NUM;      //  5
             for ( ; i < n; i++ ) {
-                var diag = line(function(x) { return x + i });
-                if ( linearSearch(diag) ) return true;
+                var diag = this.line(function(x) { return x + i });
+                if ( this.linearSearch(diag) ) return true;
             }
 
             // TODO: try to generalize
             var j = 3;
             var m = 8;
             for ( ; j < m; j++ ) {
-                var diag = line(function(x) { return -x + j });
-                if ( linearSearch(diag) ) return true;
+                var diag = this.line(function(x) { return -x + j });
+                if ( this.linearSearch(diag) ) return true;
             }
             return false;
         }
 
-        function hasConnect4() {
-            return hasVerticalConnect4() ||
-                hasHorizontalConnect4() || 
-                hasDiagonalConnect4();
+        this.hasConnect4 = function() {
+            return this.hasVerticalConnect4() ||
+                   this.hasHorizontalConnect4() || 
+                   this.hasDiagonalConnect4();
         }
 
-        return { 
-            dropRed: dropRed,
-            dropBlack: dropBlack,
-            eachCol: eachCol,
-            eachRow: eachRow,
-            hasConnect4: hasConnect4,
-            redHasConnect4: redHasConnect4,
-            blackHasConnect4: blackHasConnect4
-        }
+        return this;
 	}
 
     return {
