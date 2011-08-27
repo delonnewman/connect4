@@ -4,8 +4,16 @@
         <script type="text/javascript" src="connect4.model.js"></script>
         <script type="text/javascript" src="connect4.view.js"></script>
         <script type="text/javascript">
-            
+            document.load = function(){
+                var grid = document.getElementById("grid");
+                var context = grid.getContext("2d");
+
+                console.log(grid);
+                console.log(context);
+            };
         </script>
     </head>
-    <body></body>
+    <body>
+        <canvas id="grid" with="500" height="300">You have no HTML5 ;-( </canvas>
+    </body>
 </html>
